@@ -62,7 +62,7 @@ class App extends Component {
   tryAgainHandler = () => {
     this.setState({
       searchBarInput: '',
-      weatherDetails: {},
+      weatherDetails: [],
       error: false
     })
   }
@@ -74,7 +74,7 @@ class App extends Component {
     const API_URL = 'https://api.openweathermap.org/data/2.5/weather';
     const URL = API_URL + `?q=${city}&appid=${API_KEY}&units=metric`;
     this.setState({
-      weatherDetails: {},
+      weatherDetails: [],
       loading: true,
       error: false
     }, () => {
@@ -85,10 +85,10 @@ class App extends Component {
           // If city exists, update weather details
           if(data.cod === 200) {
             this.setState({
-              weatherDetails: {
-                temperature: data.main.temp,
-                description: data.weather[0].main
-              },
+              weatherDetails: data.list.map((el) => ({
+                temperature: el.main.temp,
+                description: el.weather[0].main
+              })),
               loading: false
             });
           } else {
@@ -118,9 +118,9 @@ class App extends Component {
       cardContent = <MoonLoader />;
     } else if (this.state.error) {
       cardContent = <ErrorNotice onClickHandler={this.tryAgainHandler} />;
-    } else if (this.state.weatherDetails.temperature && this.state.weatherDetails.description !== '') {
+    } else if (this.state.weatherDetails.length > 0 && this.state.weatherDetails[0].temperature && this.state.weatherDetails[0].description !== '') {
       // Display weather information if temperature and description exists
-      cardContent = <WeatherDetails data={this.state.weatherDetails} />;
+      cardContent = <WeatherDetails data={this.state.weatherDetails[0]} />;
     }
 
     return (
@@ -128,7 +128,7 @@ class App extends Component {
         <Header
           color={assetMapping.colors[
             // Set header color based on weather condition; if error, set color to red
-            (this.state.error) ? "error" : this.state.weatherDetails.description
+            (this.state.error) ? "error" : this.state.weatherDetails.length > 0 ? this.state.weatherDetails[0].description : ""
             ]}
           onClickHandler={this.tryAgainHandler} />
         <main className={classes.AppMain}>
