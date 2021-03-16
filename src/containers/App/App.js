@@ -16,7 +16,6 @@ import ErrorNotice from '../../components/ErrorNotice/ErrorNotice';
 const StyledButton = styled.button`
   font-size: 0;
   line-height: 0;
-  top: 37%;
   width: 20px;
   height: 20px;
   cursor: pointer;
@@ -24,8 +23,6 @@ const StyledButton = styled.button`
   border: none;
   outline: 0;
   background: 0 0;
-  position: absolute;
-  right: 25%;
 
   &::before {
     content: ">" !important;
@@ -71,7 +68,7 @@ class App extends Component {
   setWeather = () => {
     const city = this.state.searchBarInput;
     const API_KEY = process.env.REACT_APP_WEATHER_API_KEY;
-    const API_URL = 'https://api.openweathermap.org/data/2.5/weather';
+    const API_URL = 'https://api.openweathermap.org/data/2.5/forecast';
     const URL = API_URL + `?q=${city}&appid=${API_KEY}&units=metric`;
     this.setState({
       weatherDetails: [],
@@ -137,10 +134,12 @@ class App extends Component {
             onChangeHandler={this.searchBarHandler}
             onClickHandler={this.setWeather}
             error={this.state.error} />
-          <Card>
-            {cardContent}
-          </Card>
-          <StyledButton onClick={this.sayHello}>Default</StyledButton>
+          <div className={classes.Content}>
+            <Card>
+              {cardContent}
+            </Card>
+            <StyledButton onClick={this.sayHello}>Default</StyledButton>
+          </div>
         </main>
         <Footer onClickHandler={this.tryAgainHandler} />
       </div>
