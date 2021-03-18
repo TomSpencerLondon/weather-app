@@ -6,9 +6,11 @@ import classes from './Date.module.css';
 
 const date = (props) => {
     const today = new Date();
+    let nextDay = new Date();
+    nextDay.setDate(today.getDate() + props.day);
     return(
         <div className={classes.DateWrapper}>
-            {dateformat(today, "dddd, mmmm dd")} 
+            {dateformat(nextDay, "dddd, mmmm dd")}
         </div>
     );
 }

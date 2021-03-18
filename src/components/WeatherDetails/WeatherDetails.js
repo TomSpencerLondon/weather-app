@@ -10,12 +10,12 @@ const weatherDetails = (props) => {
     return(
         <div className={classes.WeatherDetailsWrapper}>
             <div className={classes.WeatherIconWrapper}>
-                <Icon type={props.data.description} />    
+                <Icon type={props.data.description} />
             </div>
             <div className={classes.WeatherDataWrapper}>
                 <Temperature degrees={props.data.temperature} />
                 <Description type={props.data.description} />
-                <Date />
+                <Date day={props.day}/>
             </div>
         </div>
     );

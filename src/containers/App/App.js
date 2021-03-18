@@ -45,7 +45,8 @@ class App extends Component {
       description: ''
     },
     loading: false,
-    error: false
+    error: false,
+    day: 0
   }
 
   // Update state with current search bar input
@@ -80,7 +81,7 @@ class App extends Component {
         .then(res => res.json())
         .then(data => {
           // If city exists, update weather details
-          if(data.cod === 200) {
+          if(data.cod === "200") {
             this.setState({
               weatherDetails: data.list.map((el) => ({
                 temperature: el.main.temp,
@@ -94,7 +95,6 @@ class App extends Component {
           }
         })
         .catch(err => {
-          console.log(err);
           this.setState({
             loading: false,
             error: true
@@ -103,21 +103,30 @@ class App extends Component {
     });
   }
 
-  sayHello = () => {
-    alert('You clicked me!');
+  increaseDay = () => {
+    this.setState({
+      day: this.state.day + 1
+    })
+  }
+
+  decreaseDay = () => {
+    this.setState({
+      day: this.state.day - 1
+    })
   }
 
   render() {
 
     // Conditionally render card content
     let cardContent = <Preview />;
+    console.log(this.state);
     if (this.state.loading) {
       cardContent = <MoonLoader />;
     } else if (this.state.error) {
       cardContent = <ErrorNotice onClickHandler={this.tryAgainHandler} />;
-    } else if (this.state.weatherDetails.length > 0 && this.state.weatherDetails[0].temperature && this.state.weatherDetails[0].description !== '') {
+    } else if (this.state.weatherDetails.length > 0 && this.state.weatherDetails[this.state.day].temperature && this.state.weatherDetails[this.state.day].description !== '') {
       // Display weather information if temperature and description exists
-      cardContent = <WeatherDetails data={this.state.weatherDetails[0]} />;
+      cardContent = <WeatherDetails data={this.state.weatherDetails[this.state.day]} day={this.state.day} />;
     }
 
     return (
@@ -135,10 +144,11 @@ class App extends Component {
             onClickHandler={this.setWeather}
             error={this.state.error} />
           <div className={classes.Content}>
+            <StyledButton onClick={this.decreaseDay}>Default</StyledButton>
             <Card>
               {cardContent}
             </Card>
-            <StyledButton onClick={this.sayHello}>Default</StyledButton>
+            <StyledButton onClick={this.increaseDay}>Default</StyledButton>
           </div>
         </main>
         <Footer onClickHandler={this.tryAgainHandler} />
