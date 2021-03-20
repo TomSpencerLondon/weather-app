@@ -35,15 +35,18 @@ const StyledButton = styled.button`
     border-style: none;
   }
 `
+const BackButton = styled(StyledButton)`
+  &::before {
+    content: "<" !important;
+  }
+  margin-right: 8px;
+`
 
 class App extends Component {
 
   state = {
     searchBarInput: '',
-    weatherDetails: {
-      temperature: null,
-      description: ''
-    },
+    weatherDetails: [],
     loading: false,
     error: false,
     day: 0
@@ -85,7 +88,8 @@ class App extends Component {
             this.setState({
               weatherDetails: data.list.map((el) => ({
                 temperature: el.main.temp,
-                description: el.weather[0].main
+                description: el.weather[0].main,
+                timestamp: el.dt_txt
               })),
               loading: false
             });
@@ -104,12 +108,19 @@ class App extends Component {
   }
 
   increaseDay = () => {
+    if(this.state.day >= this.state.weatherDetails.length - 1){
+      return;
+    }
+
     this.setState({
       day: this.state.day + 1
     })
   }
 
   decreaseDay = () => {
+    if(this.state.day === 0){
+      return;
+    }
     this.setState({
       day: this.state.day - 1
     })
@@ -126,7 +137,7 @@ class App extends Component {
       cardContent = <ErrorNotice onClickHandler={this.tryAgainHandler} />;
     } else if (this.state.weatherDetails.length > 0 && this.state.weatherDetails[this.state.day].temperature && this.state.weatherDetails[this.state.day].description !== '') {
       // Display weather information if temperature and description exists
-      cardContent = <WeatherDetails data={this.state.weatherDetails[this.state.day]} day={this.state.day} />;
+      cardContent = <WeatherDetails data={this.state.weatherDetails[this.state.day]} day={Math.floor(this.state.day  / 8)} />;
     }
 
     return (
@@ -144,7 +155,7 @@ class App extends Component {
             onClickHandler={this.setWeather}
             error={this.state.error} />
           <div className={classes.Content}>
-            <StyledButton onClick={this.decreaseDay}>Default</StyledButton>
+            <BackButton onClick={this.decreaseDay}>Default</BackButton>
             <Card>
               {cardContent}
             </Card>
