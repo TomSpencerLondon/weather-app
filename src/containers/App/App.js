@@ -108,13 +108,9 @@ class App extends Component {
   }
 
   increaseDay = () => {
-    console.log("Increasing the day!");
-    console.log("report index: ", this.state.reportIndex);
-    console.log("Increasing the day: ", this.state.weatherDetails.length);
     if(this.state.reportIndex >= this.state.weatherDetails.length - 1){
       return;
     }
-    console.log("Increasing the day 2");
 
     this.setState({
       reportIndex: this.state.reportIndex + 1
