@@ -49,7 +49,7 @@ class App extends Component {
     weatherDetails: [],
     loading: false,
     error: false,
-    day: 0
+    reportIndex: 0
   }
 
   // Update state with current search bar input
@@ -108,21 +108,21 @@ class App extends Component {
   }
 
   increaseDay = () => {
-    if(this.state.day >= this.state.weatherDetails.length - 1){
+    if(this.state.reportIndex >= this.state.weatherDetails.length - 1){
       return;
     }
 
     this.setState({
-      day: this.state.day + 1
+      day: this.state.reportIndex + 1
     })
   }
 
   decreaseDay = () => {
-    if(this.state.day === 0){
+    if(this.state.reportIndex === 0){
       return;
     }
     this.setState({
-      day: this.state.day - 1
+      day: this.state.reportIndex - 1
     })
   }
 
@@ -135,9 +135,9 @@ class App extends Component {
       cardContent = <MoonLoader />;
     } else if (this.state.error) {
       cardContent = <ErrorNotice onClickHandler={this.tryAgainHandler} />;
-    } else if (this.state.weatherDetails.length > 0 && this.state.weatherDetails[this.state.day].temperature && this.state.weatherDetails[this.state.day].description !== '') {
+    } else if (this.state.weatherDetails.length > 0 && this.state.weatherDetails[this.state.reportIndex].temperature && this.state.weatherDetails[this.state.reportIndex].description !== '') {
       // Display weather information if temperature and description exists
-      cardContent = <WeatherDetails data={this.state.weatherDetails[this.state.day]} day={Math.floor(this.state.day  / 8)} />;
+      cardContent = <WeatherDetails data={this.state.weatherDetails[this.state.reportIndex]} day={Math.floor(this.state.reportIndex  / 8)} />;
     }
 
     return (
