@@ -125,7 +125,10 @@ class App extends Component {
       day: this.state.reportIndex - 1
     })
   }
-
+  // We want to:
+  // 1. refactor App - check variable names, extract inline logic, API call separate, extras: [change to typescript, functional components to replace class]
+  // 2. What is current date, which report index are we on (flawed + creates more work) - 3 hourly report - use date time from API - then pass through date object as time stamp
+  // - convert to date straight away. Strong definition of typescript.
   render() {
 
     // Conditionally render card content
