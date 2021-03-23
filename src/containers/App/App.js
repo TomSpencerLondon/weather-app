@@ -108,12 +108,16 @@ class App extends Component {
   }
 
   increaseDay = () => {
+    console.log("Increasing the day!");
+    console.log("report index: ", this.state.reportIndex);
+    console.log("Increasing the day: ", this.state.weatherDetails.length);
     if(this.state.reportIndex >= this.state.weatherDetails.length - 1){
       return;
     }
+    console.log("Increasing the day 2");
 
     this.setState({
-      day: this.state.reportIndex + 1
+      reportIndex: this.state.reportIndex + 1
     })
   }
 
@@ -122,12 +126,13 @@ class App extends Component {
       return;
     }
     this.setState({
-      day: this.state.reportIndex - 1
+      reportIndex: this.state.reportIndex - 1
     })
   }
   // We want to:
   // 1. refactor App - check variable names, extract inline logic, API call separate, extras: [change to typescript, functional components to replace class]
-  // 2. What is current date, which report index are we on (flawed + creates more work) - 3 hourly report - use date time from API - then pass through date object as time stamp
+  // 2. What is current date, which report index are we on (flawed + creates more work) -
+  // 3 hourly report - use date time from API - then pass through date object as time stamp
   // - convert to date straight away. Strong definition of typescript.
   render() {
 
