@@ -12,6 +12,8 @@ import SearchBar from '../../components/SearchBar/SearchBar';
 import WeatherDetails from '../../components/WeatherDetails/WeatherDetails';
 import Preview from '../../components/Preview/Preview';
 import ErrorNotice from '../../components/ErrorNotice/ErrorNotice';
+import { getWeather } from '../../api/getWeather'
+
 
 const StyledButton = styled.button`
   font-size: 0;
@@ -69,42 +71,20 @@ class App extends Component {
   }
 
   // Fetch weather information and update state
-  setWeather = () => {
-    const city = this.state.searchBarInput;
-    const API_KEY = process.env.REACT_APP_WEATHER_API_KEY;
-    const API_URL = 'https://api.openweathermap.org/data/2.5/forecast';
-    const URL = API_URL + `?q=${city}&appid=${API_KEY}&units=metric`;
-    this.setState({
-      weatherDetails: [],
-      loading: true,
-      error: false
-    }, () => {
-      // Executed as callback function
-      fetch(URL)
-        .then(res => res.json())
-        .then(data => {
-          // If city exists, update weather details
-          if(data.cod === "200") {
-            this.setState({
-              weatherDetails: data.list.map((el) => ({
-                temperature: el.main.temp,
-                description: el.weather[0].main,
-                timestamp: el.dt_txt
-              })),
-              loading: false
-            });
-          } else {
-            // If city doesn't exist, throw error
-            throw data.cod
-          }
-        })
-        .catch(err => {
-          this.setState({
-            loading: false,
-            error: true
-          });
-        });
-    });
+  setWeather = async () => {
+    const weather = await getWeather(this.state.searchBarInput);
+    console.log(weather);
+    if (weather.error){
+      this.setState({
+        loading: false,
+        error: true
+      })
+    }else {
+      this.setState({
+        weatherDetails: weather.weatherDetails,
+        loading: false
+      })
+    }
   }
 
   increaseDay = () => {
@@ -134,14 +114,13 @@ class App extends Component {
 
     // Conditionally render card content
     let cardContent = <Preview />;
-    console.log(this.state);
     if (this.state.loading) {
       cardContent = <MoonLoader />;
     } else if (this.state.error) {
       cardContent = <ErrorNotice onClickHandler={this.tryAgainHandler} />;
     } else if (this.state.weatherDetails.length > 0 && this.state.weatherDetails[this.state.reportIndex].temperature && this.state.weatherDetails[this.state.reportIndex].description !== '') {
       // Display weather information if temperature and description exists
-      cardContent = <WeatherDetails data={this.state.weatherDetails[this.state.reportIndex]} day={Math.floor(this.state.reportIndex  / 8)} />;
+      cardContent = <WeatherDetails report={this.state.weatherDetails[this.state.reportIndex]} />;
     }
 
     return (
