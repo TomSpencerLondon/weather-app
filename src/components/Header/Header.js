@@ -8,7 +8,6 @@ const header = (props) => {
         <header className={classes.Header} style={{backgroundColor: props.color}}>
             <Logo colorScheme={'light'} clicked={props.onClickHandler} />
         </header>
-    ); 
+    );
 }
-
 export default header;
